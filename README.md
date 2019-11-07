@@ -1,3 +1,5 @@
+This fork has automatic wakelock and [this battery optimization workaround](https://dontkillmyapp.com/huawei) implemented.
+
 # Termux application
 
 [![Build status](https://api.cirrus-ci.com/github/termux/termux-app.svg?branch=master)](https://cirrus-ci.com/termux/termux-app)

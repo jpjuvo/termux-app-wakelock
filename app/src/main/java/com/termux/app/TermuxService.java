@@ -106,7 +106,12 @@ public final class TermuxService extends Service implements SessionChangedCallba
         } else if (ACTION_LOCK_WAKE.equals(action)) {
             if (mWakeLock == null) {
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, EmulatorDebug.LOG_TAG);
+
+                //Workaround
+                String tag = "com.my_app:LOCK";
+                if (Build.MANUFACTURER.equals("Huawei")) { tag = "LocationManagerService"; }
+
+                mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag);
                 mWakeLock.acquire();
 
                 // http://tools.android.com/tech-docs/lint-in-studio-2-3#TOC-WifiManager-Leak
@@ -187,6 +192,11 @@ public final class TermuxService extends Service implements SessionChangedCallba
     public void onCreate() {
         setupNotificationChannel();
         startForeground(NOTIFICATION_ID, buildNotification());
+
+        //Acquire wakelock automatically
+        Intent wakelockIntent = new Intent();
+        wakelockIntent.setAction(ACTION_LOCK_WAKE);
+        onStartCommand(wakelockIntent,0,0);
     }
 
     /** Update the shown foreground service notification after making any changes that affect it. */
